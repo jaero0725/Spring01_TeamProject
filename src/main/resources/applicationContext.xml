@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+
+<!-- 1) property (setter) 를 통한 주입 -->
+<!-- 	
+	<bean id="tv" class="tommy.spring.polymorphism07.SamsungTV">
+		<property name="speaker" ref="apple" />
+		<property name="price" value="3000000" />
+	</bean>
+ -->
+ 
+ 	<!-- 2)  p namespace를 이용해서 주입하기. : property을 이용해서 주입.  -->
+ 	<!-- <bean id="tv" class="tommy.spring.polymorphism07.SamsungTV" p:speaker-ref="sony"  p:speaker="3000000"></bean> -->
+ 	<!-- ##참고 : 클래스 이름이 ref로 끝나는 거는 property 방식을 못쓴다.  -->
+ 	
+ 	<!-- 3)  c namespace를 이용해서 주입하기. : 생성자를 이용해서 주입. -->
+ 	<!-- 	<bean id="tv" class="tommy.spring.polymorphism07.SamsungTV" c:speaker-ref="sony" c:speaker="3000000"></bean> -->
+ 	
+ 	<!-- 4) lookup method 인젝션 방식  -->
+ 	<!-- 
+ 		## 룩업메서드의 규칙
+ 		▣ 접근 수식어가 public 이나 protected 이어야 한다.
+ 		▣ 리턴타입이 void가 아니다
+ 		▣ 인자를 갖지 않는다.
+ 		▣ 추상메서드라도 된다.
+ 		▣ final이 아니다.
+ 	 -->
+ 	 
+ 	 <!-- 5) 임의의 빈 주입 :  임의 빈 객체는 식별 값을 갖지 않기 때문에, 임의 빈 객체를 재사용할 수 없다. -->
+	 <!-- 
+	<bean id="writeBoardService"
+		class="tommy.spring.board.service.impl.WriteBoardServiceImpl">
+		<constructor-arg>
+			<bean class="tommy.spring.board.dao.MyBoardDAO" />
+		</constructor-arg>
+	</bean> 
+	 -->
+ 	 
+<!--  	<bean id="sony" class="tommy.spring.polymorphism07.SonySpeaker"></bean>
+	<bean id="apple" class="tommy.spring.polymorphism07.AppleSpeaker"></bean> -->
+
+
+
+	<!-- List : 목록으로 넣어주어야 하는 경우.. -->
+	<!-- 
+	▣ <ref> : 다른 스프링 빈 객체를 값으로 사용
+ 	▣ <bean> : 임의 빈 객체를 생성해서 값으로 사용
+	▣ <value> : 래퍼 타입이나 String을 값으로 사용
+ 	▣ <list>, <map>, <props>, <set> : 컬렉션 객체를 값으로 사용
+ 	▣ <null> : null 레퍼런스를 값으로 사용
+	 -->
+	 
+	<!-- <bean id="collectionBean"
+		class="tommy.spring.collection01.CollectionBean">
+		<property name="addressList">
+			<list>
+				<value>서울시 서초구 서초동</value>
+				<value>서울시 동대문구 장안동</value>
+			</list>
+		</property>
+	</bean> -->
+
+	<!-- Map : Map타입의 프로퍼티를 설정하는 경우에는 <map> 태그를 사용하면 된다.  -->
+	<!-- 
+		한 개의 <entry>태그는 Map에 저장될 한 개의 <키, 값>을 표현한다.
+	▣ <ref> : 다른 스프링 빈 객체를 키로 사용
+ 	▣ <bean> : 임의 빈 객체를 생성해서 키로 사용
+ 	▣ <value> : 래퍼 타입이나 String을 키로 사용
+	 ▣ <list>, <map>, <props>, <set> : 컬렉션 객체를 키로 사용
+	 ▣ <null> : null 값을 키로 사용
+	 
+	  스프링에서는 간단한 표현을 위해서 <entry> 태그의 key, key-ref, value, value-ref 속성을 지원한다.
+	 ex) 래퍼 타입이나 String을 할당 시 : <entry key="1" value="One"/>
+	 ex) 빈 객체를 참조 할 때 : <entry key-ref="protocol" value-ref="handler" />
+	 -->
+	
+	<!-- bean id="collectionBean"
+		class="tommy.spring.collection02.CollectionBean">
+		<property name="addressList">
+			<map>
+				<entry key="홍길동" value="율도국"></entry>
+				<entry key="손오공" value="화과산"></entry>
+			</map>
+		</property>
+	</bean> -->
+	
+	<!-- Properties 타입 : Map으로서 키와 값이 모두 String 형태인 Map -->
+	<!-- <bean id="collectionBean"
+		class="tommy.spring.collection03.CollectionBean">
+		<property name="addressList">
+			<props>
+				<prop key="홍길동">율도국</prop>
+				<prop key="손오공">화과산</prop>
+			</props>
+		</property>
+	</bean> -->
+	
+	<!-- Set 타입 : 스프링에서 Set 타입의 프로퍼티를 설정할 때 <set> 태그를 사용한다. -->
+	<!-- <bean id="collectionBean"
+		class="tommy.spring.collection04.CollectionBean">
+		<property name="addressList">
+			<set value-type="java.lang.String">
+				<value>서울시 서초구 서초동</value>
+				<value>서울시 동대문구 장안동</value>
+				<value>서울시 동대문구 장안동</value>
+				<value type="java.lang.Integer">1</value> String으로 자동 변한됨.
+			</set>
+		</property>
+	</bean> -->
+	
+	<!-- Annotation 을 쓴다. -->
+	
+		<context:component-scan base-package="tommy.spring.lifecycle01"/> <!-- Annotation이 등록된 클래스를 읽어온다.  -->
+	
+	<!-- 
+	
+	context:component-scan> 태그는 어노테이션과 관련해서 아래의 BeanPostProcessor를 함께 등록해준다
+	▣ RequiredAnnotationBeanPostProcessor
+	▣ AutowiredAnnotationBeanPostProcessor
+	▣ CommonAnnotationBeanPostProcessor
+ 	▣ ConfigurationClassPostProcessor
+ 	
+ 	 <context:component-scan>태그를 사용하면 @Component 어노테이션 뿐만 아니라 @Required  @Autowired와 같은 어노테이션이 함께 적용된다.
+ 	@Required  : 필수
+ 	@Component 
+ 		
+ 		스프링은 기본적으로 검색된 클래스를 빈으로 등록할 때 클래스의(첫 글자를 소문자로 변환) 이름을 빈의 이름으로 사용한다.
+	 -->
+	 
+	 
+	<!-- 
+	<bean id="apple" class="tommy.spring.polymorphism11.AppleSpeaker"></bean>
+	 -->
+	<!-- 
+		
+	<중요한 거!!> 둘다 병행해서 사용해라~~
+	## 어노테이션과 XML 설정 병행하여 사용하기
+	
+ 	어노테이션 기반의 설정은 XML 설정처럼 부담도 없고 의존관계에 대한 정보가 자바 소스코드에 포
+	함되어 있어 사용하기가 편하다. 하지만 의존성 주입할 객체의 이름이 자바 소스코드에 명시되어 있
+	어 소스코드를 수정하지 않고 Speaker를 변경할 수 없다는 문제가 발생한다. 
+	이러한 문제는 XML 설정과 어노테이션 설정의 장점을 혼합하여 해결할 수 있다
+	
+	
+	지금의 설정에서는 SonySpeaker가 생성되어 @Autowired에 의해서 주입되는 것을 확인할 수 
+	있다. 만약 AppleSpeaker로 교체해야할 상황이 오면 스프링 설정 파일에 SonySpeaker 대
+	신에 <bean class="tommy.spring.polymorphism11.AppleSpeaker" />를 등록해 주면 된다. ▢ 결국 클라이언트가 요청할 LgTV는 @Component 어노테이션으로 처리하고 의존성 주입 역시 
+	 @Autowired로 처리한다. 다만 변경될 Speaker만 스프링 설정파일에 <bean> 등록하여 자바코드 수
+	정 없이 XML 수정만으로 Speaker를 교체할 수 있다. ▢ 이와 같이 XML 설정과 어노테이션 설정을 병행하여 사용하는 것이 좋은 방법이다. 즉 변경되지 않
+	는 객체는 어노테이션 설정을 이용하고 변경될 가능성이 있는 것은 XML 설정을 사용하여 추후에 
+	유지보수 성능을 향상 시키면 된다. 
+	
+	main - > @
+	그 밖에 - > xml 로 ....
+	
+	"OCP" : 확장에는 열려있고 ... 수정에는 닫혀잇따? 
+	
+	 라이브러리 형태로 제공되는 클래스는 반드시 XML 설정으로만 사용할 수 있다.
+ 	ex) common-dbcp API를 이용한 DataSource 설정
+ 	
+	 -->
+	 
+	 <!-- 
+	 	Spring JavaConfig 프로젝트  "코드기반 설정"
+	 : XML이 아닌 자바 코드를 이용해서 컨테이너 설정을 할 수 있는 기능을 제공하는 프로젝트이다. 
+	 
+	 @Configuration : 스프링 설정파일에 있다는 뜻.
+	 @Bean : 메서드 이름이 아이디 , return 해주는 놈이 클래스.
+	 
+	 설정이 안바뀔때 ,, ? 써먹는다. 
+	 @Import 설정 정보 추적이 편하다?
+	  -->
+
+	 <bean id="myLifeBean" class="tommy.spring.lifecycle02.MyLifeBeanImpl"
+	 	init-method="init">
+	 <property name="greeting" value="hello"></property>
+	 </bean>
+</beans>
+

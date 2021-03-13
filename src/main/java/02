@@ -1,0 +1,377 @@
+제 3 강 Spring DI (Dependency Injection) - pdf위주로 볼것
+
+자바로 따지면 객체 짖향 개념을 배우는 
+
+DI를 쓸려면 IoC라는걸 이용해야 한다
+
+결론은 뭐냐 스프링 컨테이너가 얻어오는 것을 얻어오니까 나중에 설정 파일만 해당 티비만 바꾼다
+
+자바코드 수정을 하나도 안한다 
+-> 티비를 바꿀때 설정파일만 바꿔주면 된다
+
+※ 스프링 컨테이너의 종료 총 세개
+★ 1. BeanFactory : 객체를 생성해주는 기본적인 기능
+	 org.springframework.beans.factory.BeanFactory
+	빈 객체간의 의존 관계를 설정해 주는 기능을 제공하는 가장 단순한 컨테이너
+	구현 클래스로는 org.springframework.beans.factory.xml.XmlBeanFactory
+
+	Object getBean(String name) : 등록한 이름을 주고 클래스의 타입을 주면 제네릭 거는
+	Object getBean(String name, Class requireType) : 인수로 지정된 이름의 빈 인스턴스를 생성해서 반환
+
+	 Resource 인터페이스의 구현 클래스
+		org.springframework.core.io.FileSystemResource
+		org.springframework.core.io.InputStreamResource
+		org.springframework.core.io.ClassPathResource 
+
+★ 2. ApplicationContext - Local : 객체의 라이프사이클을 관리하는 기본기능 외에 추가적인 기능
+	빈 객체의 라이프 사이클, 파일과 같은 자원의 추상화. 메시지 지원 및 국제화지원, 이벤트 지원 , XML 스키마 확장을 통한 편리한
+		걸정 등 추가적인 기능을 제공
+
+	ApplicationContext 인터페이스의 구현 클래스를 주로 사용한다.
+3. WebApplicationContext - Web(ApplicationContext와 기능은 완전같다)
+	하나의 웹어플리케이션(myWeb전체에서 하나 생기는 -> ServletContext와 비슷)
+
+웹에서 직접 만드는 상황이 오면 뭔가 이상한 상황이다
+
+★ 나중에 web.xml에 설정 정보를 등록 한다
+	-> 개발자가 직접 만드는경우는 없다
+
+WebApplicationContext context = 
+	WebApplicationContextUtils.getWebApplicationContext(getServletContext());
+MyService myService = (MyService) context.getBean("myService");
+-> 위와 같이 코드를 직접 써야 하는 경우면 문제가 있는
+
+★ 스프링컨테이너는 세개 있는데 중요한건 두가지
+-------------------------------------------------------------------------------------------------------------------------------------------------
+스프링 XML설정
+beans라는 루트 디렉터리 안에다가 bean을 등록
+네가지중 bean하고 import정도만 쓴다
+	import는 다른 파일을 갖고 들어오는
+	여러 xml 파일을 하나로 통합할때 <import>를 쓴다
+<bean>태그
+	id (이름)
+	name(별명)
+	class 
+	abstract (추상)
+	singleton -> 기본적으로 스프링은 싱글톤
+	lazy-int -> 즉시로딩을 함녀 좋은데 경우에 따라서 A라는 클래스는 어쩌다 한번 쓰는데 덩치가 큰 경우
+		메모리는 많이 잡아먹으면서 어쩌다 한번 쓰는 경우 지연로딩을 행하는
+		평소에 로딩을 안해 놨다가 
+	autowire : 클래스와으이 연동을 자동으로 연결
+	
+	이런 속성들을 다 외우는것보다 필요에 따라 찾아보는
+
+등록을 하면 만들어지는
+
+factory.close();를 안하면 계속 컨테이너를 들고 있는
+
+※ lazy-init 속성 
+어떤 애들은 자주쓰지 않으면서 메모리 많이 잡아먹는 -> 그럴 경우 지연 로딩
+
+※ scope 빈객체의 범위
+proxy의 개념 
+	proxy서버를 예를 들면 
+	단체로 www.daum.net해서 들어가면 각자 들어가지는
+	proxy서버를 거쳐가면 
+		다음의 내용을 저장해서 다음에 쏴주는		
+	proxy - 대행자
+	proxy서버를 갖다 놓으면 실제로 해저케이블을 통해 가는게 아닌 저장해놓은곳으로 가는
+
+말안해도 스프링에서 객체를 싱글톤으로 만든다 (명시적으로 굳이 안써도싱글톤)
+
+※ 의존성 주임: 일반적으로 DI(Dependency Injection)
+
+의존성 주입 방법에는 ★다섯가지가 있다
+Dependency Lookup ; 검색
+Dependency Injection : 주입
+	setter Injection과 생성자를 기반으로 하는 Constructor Injection으로 나뉜다
+
+첫번째 문제 스피커가 두개 만들어진다
+두번째 문제 나 이거 애플 스피커로 바꾸고 싶은데요?  -> 그래서 인터페이스로 만든다
+
+Setter 인젝션 사용하기 : Setter 메서드를 이용하여 의존성 주입
+	setXXX() 형태의 프로퍼티의 이름은 XXX가 된다
+	
+	ref : 자식요소 <ref bean="빈이름"/> 대신에 사용할 수 있다.
+	value : 자식요소 <value>값</value> 대신에 사용할 수 있다
+
+Setter  메서드는 스프링 컨테이너가 자동으로 호출하며 호출하는 시점은 <bean> 객체가 갱성된 직후이다. 
+	setter 인젝션이 동작하려면 Settr 메서드뿐만 아니라 default 생성자도 반드시 필요하다
+
+setter 인젝션을 이용하려면 <property> 엘리먼트를 사용해야 하면 name 속성 값이 호출하고자 하는 메서드 이름이다.
+	즉, name 속성 값이 "speaker"라고 되어 있으면 호출되는 메서드는 setSpeaker() 이다.
+	
+	Setter 메서드 이름		name 속성 값
+	setSpeaket() 		name="speaker"
+	setAddressList()		name="addressList"
+	setBoardDAO		name="boardDAO"
+-------------------------------------------------------------------------------------------------------------------------------------------------
+★ 의존성 주입이란 뭐냐면 
+내가 클래스를 만들면 
+	원래 Test test = new Test()라고 객체를 생성해야 하는데 
+	거기에 해당하는 메서드를 호출한다
+
+	위와 같이 직접 생성하면 관계가 맺어지게 된다
+	직접하는게 아니라 누가 만들어서 주면 안돼? 이런 의미
+
+	생성자에서 Test를 받는방법이 있고 메서드에서 받을 수 있지 않냐?
+
+★★★★★★★★★★★★★★★★주입하는 방법이 크게 두가지(원래 다섯가지)★★★★★★★★★★★★★★★★
+생성자에서 받아서 주입하는 방법
+메서드에서 주입하는 방법
+
+주입한다는 것은 스프링이 만들어서 나한테 준다 
+이걸 받아서 쓰는 개념
+-------------------------------------------------------------------------------------------------------------------------------------------------
+★★★★★ xml 네임스페이스를 이용한 설정
+
+p:변수-ref="참조할 객체 아이디"
+
+P네임스페이스를 설정했으면 다음과 같이 참조형 변수에 참조할 객체를 할당할 수 있다
+p:변수명="설정할 값"
+
+의존성 주입은 객체를 넣어주는 개념 -> 내가 안 만드는
+
+클래스일 경우 -ref
+
+예전에 없었는데 자바 4.0에 나온게 c(constructor)
+c:speakrer-ref="sony" c:price="2000000"로 설정을 할 수 있다
+끝이 ref로 끝나는 애들은 ref-ref이런식으로 못쓴다
+
+※ 룩업메서드 인젝션 방식
+룩업: 찾다
+메서드를 검색해서 주입하는 방식
+
+getCommandFactory에서 CommandFactory를 리턴해주는
+룩업메서드 주입 방식
+
+룩업메서드의 규칙
+-접근자가 public이나 protected이어야 한다
+-void면 안된다
+- 인자를 갖지 않는다
+- 추상메서드라도 된다
+- final이 아니다
+
+※ 임의 빈 객체 전달 
+	식별 값을 갖지 않기 때문에, 임의 빈 객체를 재사용할 수 없다
+-------------------------------------------------------------------------------------------------------------------------------------------------
+※ 컬렉션 객체 설정(클래스나 값하나가 아니라 Arraylist나 배열로 넣어주는)
+컬렉션 타입을 입력받기 위한 스프링 태그
+
+property name="filters"== setFilters랑 같다
+
+스프링은 기본적으로 <value>태그에 명시된 값을 String타입으로 처리
+
+자바코드에서 제네릭 걸면 알아서 들어간다
+
+List 타입 매핑 실습 할때 applicationContext에서 TV는 주석처리하고 실습<!--	-->
+
+※ Map타입
+<entry>가 한 세트
+한개의 <entry>태그가 Map에 저장될 한 개의 <키, 값>을 표현한다
+class는 위제 reference(-ref)가 달려있다
+
+실습할때 <list></list>부분을 지우고 <entry>넣고 실습
+
+읽어서 for문 도는 
+
+※ properties타입(Map의 경우 순서가 있는데 properties는 순서가 없다)
+
+키값과 value가 String
+
+※ Set 타입 실습(반복을 허용하지 않기 때문에 똑같은 값을 설정해도 하나만 나온다)
+xml에 등록할때 <prop>부분을 지우고 <set>
+중복을 허용하지 않는다
+
+무한데이터가 잘 이해되지 않으면 자바 collection을 다시한번 볼 것
+-------------------------------------------------------------------------------------------------------------------------------------------------
+실무에선 어노테이션을 많이 쓴다
+
+어노테이션 기반 설정
+base-package 속성에 스프링이 클래스를 검색할 패키지를 지정한면 된다
+
+컴포넌트 어노테이션이 등록되어있는 것을 갖고 온다
+
+컴포넌트가 기본적으로 빈
+
+★ @Repository(DAO라고 보면 됨), @Component(기본), @Service, @Controller
+이러한 어노테이션이 붙은애들을 자동으로 등록해주는
+
+ ▣ RequiredAnnotationBeanPostProcessor -> @Required(필수라는 뜻)
+ ▣ AutowiredAnnotationBeanPostProcessor -> @Autowired(자동으로 등록)
+ ▣ CommonAnnotationBeanPostProcessor
+ ▣ ConfigurationClassPostProcessor  
+
+※ 자동 검색된 빈의 이름과 범위
+ 스프링은 기본적으로 검색된 클래스를 빈으로 등록할 때 클래스의(첫 글자를 소문자로 변환) 이름
+을 빈의 이름으로 사용
+
+@Component
+public class MyObject{...} -> <bean id="myObject"....> 이거랑 같다
+
+@Component
+@Scope(value="prototype", proxyMode=ScopedProxyMode.TARGET_CLASS)
+public class MyObject{ //... 이하 생략
+=> 이렇게 쓸려면 CGLIB 를 넣어야 한다
+
+ ScopedProxyMode에 정의된 열거 값
+ ▣ NO : 프록시를 생성하지 않음
+	말이없으면 이게 된다
+ ▣ INTERFACES : 인터페이스에 대해 프록시를 생성한다.(JDK 다이나믹 프록시 이용)
+	JDK에 포함된 DynamicProxy라고 있음
+ ▣ TARGET_CLASS : 클래스에 대해 프록시를 생성한다.(CGLIB 이용)
+ ▣ DEFAULT : 기본 값, 별도의 설정을 하지 않으면 NO와 동일. <context:component-scan>을 
+이용하여 변경가능
+
+<context:component-scan> 태그의 scoped-proxy 속성 값을 사용하면 기본적으로 프록시 객체를 생
+성할지 여부를 지정할 수 있다. 속성 값으로는 "no", "interfaces", "targetClass"가 올 수 있다.
+
+※ 스캔 대상 클래스 범위 지정하기
+ <context:include-filter> -> 포함시키는 것
+<context:exclude-filter type="aspectj" -> 배재할 것들
+=> 지금은 일단 안 쓰지만 뒤에 가면 모른다
+
+★ regex
+★ aspect
+	org.example..(하위다)
+	.. : 하위 다
+	. : 0개 이상
+	
+	org.myProject.myProgram..My*.my*(..) -> myProgram의 하위폴더를 다 하고 
+
+	@Component("tv")//얘를 빈으로 등록하는데 아이디를 tv로 등록해라
+
+그러면 의존성 주입을 어떻게 하냐 ? 
+역시 어노테이션
+
+※ 의존성 주입 설정
+@Autowired
+	주로 생성자,필드, 메서드 세 곳에 적용이 가능. 대부분은 멤버변수위에 선언
+	타입을 이용한 프로퍼티 자동설정 기능
+	만약에 빈객체가 존재하지 않거나(기본적으로 Required가 false) 두 개 이상이면 예외를 발생
+
+	@Autowired//자동으로 speaker타입을 등록
+		스프링에 미리 등록이 되어야 한다
+		의존성 검색에서는 검색대상만 원하면 찾아올 수 있는데
+		의존성 주입을 할려면 빈이되야 한다
+
+ Error creating bean with name 'tv': Unsatisfied dependency expressed through field 'speaker'; nested exception is org.springframework.beans.factory.NoUniqueBeanDefinitionException: No qualifying bean of type 'tommy.spring.polymorphism.Speaker' available: expected single matching bean but found 2: apple,sony
+=> 이런거 해결해주는게 @Qualifier 	
+
+@Qualifier : 한정자 특정한 이름
+	동일한 타입의 빈 객체들 중 득정 빈을 사용하도록 설정
+	@Qualifier("apple") -> 스피커를 주입하는데 자동으로 apple인거를 설정해라
+@Inject - @Autowired와 똑같다
+	
+@Resource ; 이름과 타입을 합쳐놓은
+	객체 이름을 이용해서 의존성 주입 
+	사용할려면 <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>이게 등록되야 한다
+
+실무에서는 어노테이션을 주로 쓰는 데 둘다 알아야 한다
+그리고 공부 할때는 XML 설정을 먼저
+-------------------------------------------------------------------------------------------------------------------------------------------------
+어노테이션과 XML 설정 병행하여 사용하기
+DI의 핵심 소스코드를 고치지 않고 새로운 기능을 추가 해야한다 
+
+XML로 다 치면 진짜 다 쳐야 한다 - > 천줄이상이 되면 추적이 어려운 단점
+어노테이션의 설정 -> 결국 유지보수 시 또 까야 하는
+
+무조건 어노테이션 써라 무조건 XML써라가 아니라 소스코드는 안쓰는 방식으로 
+
+결국 클라이언트가 요청할 LgTV는 @Component 어노테이션으로 처리하고 의존성 주입 역시 
+ @Autowired로 처리한다. 다만 변경될 Speaker만 스프링 설정파일에 <bean> 등록하여 자바코드 수
+정 없이 XML 수정만으로 Speaker를 교체할 수 있다.
+
+앞으로 변경될 가능성이 있는것은 설정 파일로
+
+이렇게 안되면 코드 엄청나게 고쳐야 한다
+
+끄기 전에 해야 할작업은 destroy에 넣으면 된다
+	init는 시작할때 작업
+
+이와 같이 XML 설정과 어노테이션 설정을 병행하여 사용하는 것이 좋은 방법이다. 즉 변경되지 않
+는 객체는 어노테이션 설정을 이용하고 변경될 가능성이 있는 것은 XML 설정을 사용하여 추후에 
+유지보수 성능을 향상 시키면 된다. => OCP 원리 
+
+ common-dbcp API를 이용한 DataSource 설정 -> 이런건 어쩔수 없이 XML에 빈으로 등록
+
+※ 참고 : 어노테이션
+스프링 MVC에서는 @Component를 상속하여 다음과 같은 추가 어노테이션을 제공한다.
+
+ -------------------------------------------------------------------------------------------------------------------------------------------------
+※ XML이 아닌 자바 코드 기반 설정
+① @Configuration 어노테이션과 @Bean 어노테이션을 이용한 코드 기반 설정(스프링 부트가서 배운다)
+	import org.springframework.context.annotation.Bean;
+	import org.springframework.context.annotation.Configuration;
+	@Configuration
+	public class SpringConfig{
+		@Bean
+	public AlramDevice alarmDevice(){
+		return new SmsAlarmDevice();
+	}
+}
+// 위의 클래스 설정과 같은 스프링 설정 코드
+<bean id="alarmDevice" class="tommy.spring.mybean.SmsAlarmDevice" />
+
+id이름은 메서드 이름과 동일
+
+이렇게 하면 설정 바꿀려면 안을 들어가봐야 한다 (소스를 바꿔야 한다)
+
+② @Bean 객체 간의 의존관계 설정
+	▢ 의존할 빈 객체에 대한 메서드를 호출하는 것으로 관계를 설정할 수 있다.	
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+@Configuration
+public class SpringConfig{
+	@Bean
+	public View viewer(){
+		MonitorViewer viewer = new MonitorViewer();
+		viewer.setDisplayStrategy(displayStrategy());
+		return viewer;
+	}
+	@Bean
+	public DisplayStrategy displayStrategy(){
+		return new DefaultDisplayStrategy();
+	}
+}
+
+③ @Bean 어노테이션의 Autowire 속성을 이용한 연관 자동 설정
+	▢ @Bean 어노테이션을 사용하는 경우에도 Autowire 속성을 이용해서 자동 연관 설정을 설정할 수 있다.
+
+④ @Configuration 어노테이션 기반 설정 정보사용
+	▢ 클래스에 @Configuration 어노테이션을 적용한다고 해서 스프링 컨테이너가 해당 클래스로부터 빈 
+	정보를 구할 수 있는 것은 아니다
+⑤ AnnotationConfigApplicationContext를 이용한 @Configuration 클래스 사용
+	▢ 아래와 같이 생성자에 @Configuration 클래스의 생성자를 전달해 주면 된다.
+
+⑥ XML 설정 파일에서 @Configuration 어노테이션 클래스 사용하기
+	▢ XML 설정 파일에서 @Configuration 클래스를 사용하려면 ConfigurationClassPostBeanProcessor 클래스와 
+	@Configuration 어노테이션 클래스를 스프링 설정 파일에서 빈으로 등록 해 주면 된다. 
+	▢ 또는 <context:annotation-config /> 태그를 이용해도 된다. ▢ 마찬가지로 컴포넌트의 스캔 대상이 
+		됨으로 <context:component-scan /> 태그를 이용해도 된다.
+⑦ @ImportResource를 통해 @Configuration 설정 클래스에서 XML 사용하기
+	▢ @Configuration 클래스에서 XML 설정정보를 함께 사용하고 싶다면 @ImportResource 어노테이션을 
+	사용하면 된다.
+
+⑧ 서로 다른 @Configuration 어노테이션 클래스 간의 의존 설정
+	▢ 서로 다른 설정 클래스에 존재하는 빈 객체 간의 의존을 처리할 때는 @Autowired 어노테이션이나 
+	@Resource 어노테이션을 이용해서 의존에 필요한 빈 객체를 전달 받을 수 있다.
+
+⑨ @Import를 이용한 @Configuration 어노테이션 클래스 조합
+	▢ @Import 어노테이션을 이용하여 하나의 @Configuration 클래스에서 다수의 @Configuration 클래스
+	를 묶을 수 있다
+ 	ex) @Import({MyServiceConfig.class, YourServiceConfig.class})
+	▢ @Import 어노테이션을 이용할 경우의 장점은 개발자가 모든 @Configuration 클래스 목록을 기억할 - 91 -
+	필요 없이 @Import 어노테이션에 적용된 클래스만 기억하면 손쉽게 설정 정보 추적이 가능하다는 
+	점이다.
+
+=> 부트가서 Security할때 쓸거다
+
+
+
+
+
+
+
+
