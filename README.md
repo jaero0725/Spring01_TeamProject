@@ -1,5 +1,5 @@
 # Spring01_TeamProject
-Spring을 통한 깃허브 연습 첫번째
+### Spring을 통한 깃허브 연습 첫번째
 
 #### 1) Spring DI
 #### 2) Spring AOP 
