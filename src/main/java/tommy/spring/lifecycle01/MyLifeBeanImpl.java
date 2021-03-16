@@ -7,6 +7,7 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
+
 //Bean의 라이프 사이클을 알아보자. 
 //MyLifeBean, BeanNameAware, BeanFacotryAware, InitializingBean, DisposableBean 상속 받음
 public class MyLifeBeanImpl implements MyLifeBean, BeanNameAware, BeanFactoryAware, InitializingBean, DisposableBean {
