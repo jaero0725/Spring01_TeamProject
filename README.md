@@ -1,8 +1,10 @@
 # Spring01_TeamProject
 ### Spring을 통한 깃허브 연습 첫번째
 
-#### 1) Spring DI    [] learn the GraphQL 
-#### 2) Spring AOP    [] learn the GraphQL
+#### 1) Spring DI     
+- [ ] 운동 하기
+- [x] 강의 듣기
+#### 2) Spring AOP    
 #### 3) Maven 
 #### 4) Spring JDBC + AOP 심화
 #### 5) Spring JDBC + Transaction 처리
