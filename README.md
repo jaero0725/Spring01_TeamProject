@@ -1,7 +1,7 @@
 # Spring01_TeamProject
 ### Spring을 통한 깃허브 연습 첫번째
 
-  
+ <b>
 - [x] 1) Spring DI   
 - [x] 2) Spring AOP
 - [x] 3) Maven
@@ -17,3 +17,4 @@
 - [ ] 13) MyBatis
 - [ ] 14) JPA
 
+</b>
