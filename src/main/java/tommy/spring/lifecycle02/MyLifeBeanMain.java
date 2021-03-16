@@ -9,6 +9,7 @@ public class MyLifeBeanMain {
 	public static void main(String[] args) {
 		
 		AbstractApplicationContext ctx = new GenericXmlApplicationContext("applicationContext.xml");
+	
 		MyLifeBean bean = (MyLifeBean) ctx.getBean("myLifeBean"); //mapping
 		bean.sayHello();
 		ctx.close();
