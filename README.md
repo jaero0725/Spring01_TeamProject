@@ -1,8 +1,9 @@
 # Spring01_TeamProject
 ### Spring을 통한 깃허브 연습 첫번째
 
-1) Spring DI     - [x] 
-
+1) Spring DI    
+- [ ] 운동 하기
+- [x] 강의 듣기
 2) Spring AOP    - [x] 
 3) Maven         - [x] 
 4) Spring JDBC + AOP 심화    - [ ] 
