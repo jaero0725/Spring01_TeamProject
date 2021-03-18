@@ -5,9 +5,9 @@
 - [x] 1) Spring DI   
 - [x] 2) Spring AOP
 - [x] 3) Maven
-- [ ] 4) Spring JDBC + AOP 심화
-- [ ] 5) Spring JDBC + Transaction 처리
-- [ ] 6) Maven - Spring JDBC 심화
+- [x] 4) Spring JDBC + AOP 심화
+- [x] 5) Spring JDBC + Transaction 처리
+- [x] 6) Maven - Spring JDBC 심화
 - [ ] 7) Maven - Spring Transaction 심화
 - [ ] 8) MVC 구조
 - [ ] 9) 프레임워크 개발
