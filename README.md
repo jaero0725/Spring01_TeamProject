@@ -14,5 +14,5 @@
 - [x] 10) Spring MVC
 - [x] 11) Spring MVC Annotation 기반
 - [x] 12) Spring MVC 활용
-- [ ] 13) MyBatis
-- [ ] 14) JPA
+- [x] 13) MyBatis
+- [x] 14) JPA
